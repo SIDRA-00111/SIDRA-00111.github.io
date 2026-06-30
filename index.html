@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIDRA · Sistema de Autocultivo Sustentable</title>
+  <meta name="description" content="SIDRA · Sistema de Autocultivo Sustentable. Prototipo de riego vertical automatizado." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============================================================
+       SIDRA · App web (prototipo)
+       Para editar TEXTOS y ENLACES rápidos, revisa app.js (sección CONFIG).
+       Para editar COLORES, revisa styles.css (:root, arriba de todo).
+       ============================================================ -->
+
+  <!-- Capa de carga -->
+  <div id="loader" class="loader">
+    <div class="loader__mark">
+      <span class="drop"></span>
+    </div>
+    <p class="loader__text">Cargando tu sistema SIDRA…</p>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <!-- ====== Barra superior (logo) ====== -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true">
+          <span class="brand__leaf"></span>
+          <span class="brand__drop"></span>
+        </span>
+        <span class="brand__text">
+          <strong>SIDRA</strong>
+          <small>Sistema de Autocultivo Sustentable</small>
+        </span>
+      </div>
+      <div class="brand__status" id="brandStatus">
+        <span class="dot dot--ok"></span>
+        <span id="brandStatusText">Funcionando</span>
+      </div>
+    </header>
+
+    <!-- Banner de conexión (se muestra solo si falla el endpoint real) -->
+    <div class="banner" id="connBanner" hidden>
+      <span>⚠︎</span>
+      <span id="connBannerText">Mostrando datos de demostración.</span>
+    </div>
+
+    <!-- ====== Contenido ====== -->
+    <main class="content">
+      <!-- ---------- INICIO / DASHBOARD ---------- -->
+      <section class="view" id="view-inicio" data-view="inicio">
+        <p class="kicker">Cuidar el agua también puede empezar desde un balcón.</p>
+        <h1 class="hero-title" id="heroTitle">Hola, tu sistema está activo</h1>
+
+        <!-- Tarjeta destacada: plan de riego en lenguaje simple -->
+        <article class="card card--feature">
+          <div class="card--feature__icon" aria-hidden="true">💧</div>
+          <div>
+            <p class="card--feature__label">Plan de riego de hoy</p>
+            <p class="card--feature__msg" id="featureRiego">—</p>
+          </div>
+        </article>
+
+        <!-- Métricas rápidas -->
+        <div class="grid grid--metrics" id="metricsGrid"></div>
+
+        <!-- Cultivos activos + próximo riego -->
+        <div class="grid grid--two">
+          <article class="card">
+            <h2 class="card__title"><span class="ic">🌱</span> Cultivos activos</h2>
+            <ul class="chips" id="cultivosChips"></ul>
+            <p class="muted" id="cultivosResumen"></p>
+          </article>
+          <article class="card">
+            <h2 class="card__title"><span class="ic">⏱️</span> Próximo riego</h2>
+            <p class="big" id="proximoRiego">—</p>
+            <p class="muted" id="cosechaResumen"></p>
+          </article>
+        </div>
+
+        <!-- Alerta de agua (simulada por ahora) -->
+        <article class="card card--alert" id="aguaAlerta">
+          <span class="ic">🪣</span>
+          <div>
+            <strong id="aguaTitulo">Agua suficiente</strong>
+            <p class="muted" id="aguaMensaje">El estanque tiene nivel adecuado.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ---------- MIS CULTIVOS ---------- -->
+      <section class="view" id="view-cultivos" data-view="cultivos" hidden>
+        <p class="kicker">Mis cultivos</p>
+        <h1 class="view-title">Lo que estás sembrando</h1>
+        <div class="grid grid--cards" id="cultivosGrid"></div>
+      </section>
+
+      <!-- ---------- RIEGO INTELIGENTE ---------- -->
+      <section class="view" id="view-riego" data-view="riego" hidden>
+        <p class="kicker">Riego inteligente</p>
+        <h1 class="view-title">Recomendación del sistema</h1>
+
+        <article class="card card--feature">
+          <div class="card--feature__icon" aria-hidden="true">💧</div>
+          <div>
+            <p class="card--feature__label">En palabras simples</p>
+            <p class="card--feature__msg" id="riegoMsg">—</p>
+          </div>
+        </article>
+
+        <div class="grid grid--metrics" id="riegoMetrics"></div>
+
+        <article class="card">
+          <h2 class="card__title"><span class="ic">🧪</span> Sustrato recomendado</h2>
+          <p class="big" id="riegoSustrato">—</p>
+        </article>
+
+        <article class="card">
+          <h2 class="card__title"><span class="ic">🤖</span> ¿Por qué esta recomendación?</h2>
+          <p id="riegoJustificacion">—</p>
+        </article>
+
+        <!-- Sección técnica plegable -->
+        <details class="tech">
+          <summary>Ver información técnica</summary>
+          <div class="tech__body">
+            <p class="muted">Plan técnico que lee el ESP32:</p>
+            <code class="tech__code" id="planTecnico">—</code>
+            <p class="muted">Endpoint sugerido para el ESP32:</p>
+            <code class="tech__code" id="endpointEsp32">?mode=esp32&usuario=…</code>
+            <p class="muted small">Conexión sin claves visibles. Las claves API quedan protegidas en el backend (Google Apps Script).</p>
+          </div>
+        </details>
+      </section>
+
+      <!-- ---------- CLIMA ---------- -->
+      <section class="view" id="view-clima" data-view="clima" hidden>
+        <p class="kicker">Clima</p>
+        <h1 class="view-title">Condiciones actuales</h1>
+
+        <article class="card card--clima">
+          <div class="clima__temp">
+            <span id="climaTemp">—</span><sup>°C</sup>
+          </div>
+          <div class="clima__meta">
+            <p id="climaDetalle">—</p>
+            <p class="muted">Humedad: <span id="climaHumedad">—</span>%</p>
+            <p class="muted small">Actualizado: <span id="climaFecha">—</span></p>
+          </div>
+        </article>
+
+        <div class="grid grid--two">
+          <article class="card">
+            <h2 class="card__title"><span class="ic">📍</span> Ubicación</h2>
+            <p class="big" id="climaUbic">—</p>
+            <p class="muted" id="climaUbicDetalle">—</p>
+          </article>
+          <article class="card">
+            <h2 class="card__title"><span class="ic">💡</span> Cómo afecta al riego</h2>
+            <p id="climaMensaje">—</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ---------- PROTOTIPO ---------- -->
+      <section class="view" id="view-prototipo" data-view="prototipo" hidden>
+        <p class="kicker">Prototipo</p>
+        <h1 class="view-title">Tu sistema físico</h1>
+
+        <div class="grid grid--metrics" id="protoMetrics"></div>
+
+        <div class="grid grid--two">
+          <article class="card">
+            <h2 class="card__title"><span class="ic">☀️</span> Energía y bomba</h2>
+            <ul class="statlist" id="protoEstados"></ul>
+          </article>
+          <article class="card">
+            <h2 class="card__title"><span class="ic">🌫️</span> Captación de agua</h2>
+            <p class="muted" id="protoAtrapaniebla">—</p>
+            <p>El usuario puede llenar el estanque si no hay captación de niebla, y luego SIDRA realiza el riego automáticamente.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ---------- COMUNIDAD ---------- -->
+      <section class="view" id="view-comunidad" data-view="comunidad" hidden>
+        <p class="kicker">Comunidad</p>
+        <h1 class="view-title">Abierta y replicable</h1>
+        <p class="lead">SIDRA busca ser una solución abierta y replicable. En esta sección puedes revisar el manual, pedir ayuda o conocer más sobre la comunidad del proyecto.</p>
+
+        <div class="grid grid--actions">
+          <a class="action action--lime" id="lnkManual" href="#" target="_blank" rel="noopener">
+            <span class="ic">📘</span> Abrir manual de usuario
+          </a>
+          <a class="action action--agua" id="lnkCorreo" href="#">
+            <span class="ic">✉️</span> Pedir ayuda por correo
+          </a>
+          <a class="action" id="lnkInstagram" href="#" target="_blank" rel="noopener">
+            <span class="ic">📷</span> Instagram de SIDRA
+          </a>
+          <a class="action" id="lnkWeb" href="#" target="_blank" rel="noopener">
+            <span class="ic">🌐</span> Página web de SIDRA
+          </a>
+        </div>
+
+        <article class="card">
+          <h2 class="card__title"><span class="ic">❓</span> Preguntas frecuentes</h2>
+          <details class="faq"><summary>¿Tengo que regar todos los días?</summary><p>No. SIDRA calcula cuánto y cada cuánto regar. Tú solo te aseguras de que el estanque tenga agua.</p></details>
+          <details class="faq"><summary>¿Qué pasa si no hay niebla?</summary><p>Puedes llenar el estanque manualmente y el sistema seguirá regando automáticamente según la recomendación.</p></details>
+          <details class="faq"><summary>¿Necesito saber de programación?</summary><p>No. SIDRA está pensado para ser replicable y de bajo costo, con manual de usuario y comunidad de apoyo.</p></details>
+        </article>
+
+        <p class="lead small">¿Mejoraste tu sistema o tienes una experiencia que compartir? Cuéntanos por Instagram o correo. La comunidad crece con cada balcón.</p>
+      </section>
+
+      <!-- ---------- ACERCA DE ---------- -->
+      <section class="view" id="view-acerca" data-view="acerca" hidden>
+        <p class="kicker">Acerca de SIDRA</p>
+        <h1 class="view-title">Cuidar el agua desde un balcón</h1>
+
+        <article class="card">
+          <h2 class="card__title">¿Qué es SIDRA?</h2>
+          <p>SIDRA es un Sistema de Autocultivo Sustentable: un sistema de riego vertical automatizado, apoyado por energía solar y captación de agua natural mediante un atrapanieblas. Busca que cuidar el agua sea simple y replicable.</p>
+        </article>
+        <article class="card">
+          <h2 class="card__title">¿Quiénes lo desarrollan?</h2>
+          <p>Un grupo de estudiantes de Ingeniería Comercial, como parte del ramo Liderazgo, Negociación y Equipos.</p>
+        </article>
+        <article class="card">
+          <h2 class="card__title">Objetivo y enfoque</h2>
+          <p>Cuidar el agua mediante riego vertical inteligente, con un enfoque de bajo costo y código abierto, acompañado de manual de usuario y comunidad. La idea es que cualquiera pueda replicarlo.</p>
+        </article>
+        <div class="grid grid--two">
+          <a class="action" id="lnkWeb2" href="#" target="_blank" rel="noopener"><span class="ic">🌐</span> Página web</a>
+          <a class="action" id="lnkInstagram2" href="#" target="_blank" rel="noopener"><span class="ic">📷</span> Instagram</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ====== Navegación inferior (móvil) / lateral (escritorio) ====== -->
+    <nav class="nav" aria-label="Navegación principal">
+      <button class="nav__item is-active" data-target="inicio"><span class="ic">🏠</span><span>Inicio</span></button>
+      <button class="nav__item" data-target="cultivos"><span class="ic">🌱</span><span>Cultivos</span></button>
+      <button class="nav__item" data-target="riego"><span class="ic">💧</span><span>Riego</span></button>
+      <button class="nav__item" data-target="clima"><span class="ic">⛅</span><span>Clima</span></button>
+      <button class="nav__item" data-target="prototipo"><span class="ic">⚙️</span><span>Prototipo</span></button>
+      <button class="nav__item" data-target="comunidad"><span class="ic">👥</span><span>Comunidad</span></button>
+      <button class="nav__item" data-target="acerca"><span class="ic">ℹ️</span><span>Acerca</span></button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

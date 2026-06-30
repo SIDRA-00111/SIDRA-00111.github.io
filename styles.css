@@ -1,0 +1,300 @@
+/* ============================================================
+   SIDRA · Estilos
+   --------------------------------------------------------------
+   COLORES PRINCIPALES: edítalos aquí abajo (:root).
+   Cada color tiene un comentario para que sepas qué cambia.
+   ============================================================ */
+:root {
+  --negro:      #111111; /* Texto principal y barra superior */
+  --blanco:     #FFFFFF; /* Fondo de tarjetas */
+  --lima:       #D7E82F; /* Verde lima del logo (acentos, botones) */
+  --agua:       #7CCFD3; /* Celeste agua del logo (acentos, botones) */
+  --fondo:      #F5F7F8; /* Gris claro de fondo general */
+  --gris:       #6B7280; /* Gris para textos secundarios */
+
+  /* Derivados (no es necesario tocarlos) */
+  --lima-soft:  #eef3b8;
+  --agua-soft:  #d6f0f1;
+  --borde:      #e7ebed;
+  --ok:         #2fae6a;
+  --alerta:     #e0a800;
+
+  --radio:      18px;
+  --radio-lg:   24px;
+  --sombra:     0 6px 24px rgba(17,17,17,.06);
+  --sombra-sm:  0 2px 10px rgba(17,17,17,.05);
+
+  --font-body:    'Manrope', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-body);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--fondo);
+  color: var(--negro);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Loader ===== */
+.loader {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; background: var(--fondo); z-index: 50;
+}
+.loader__mark {
+  width: 64px; height: 64px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--lima), var(--agua));
+  display: grid; place-items: center;
+  box-shadow: var(--sombra);
+}
+.loader .drop {
+  width: 22px; height: 22px; background: var(--negro);
+  border-radius: 50% 50% 50% 0; transform: rotate(45deg);
+  animation: bob 1s ease-in-out infinite;
+}
+@keyframes bob { 0%,100%{ transform: rotate(45deg) translateY(0);} 50%{ transform: rotate(45deg) translateY(-6px);} }
+.loader__text { color: var(--gris); font-weight: 600; }
+
+/* ===== Layout base ===== */
+.app { min-height: 100vh; padding-bottom: 84px; } /* espacio para nav inferior */
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 18px;
+  background: var(--negro); color: var(--blanco);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand__logo {
+  position: relative; width: 38px; height: 38px; border-radius: 12px;
+  background: var(--blanco); display: grid; place-items: center; flex: none;
+}
+.brand__leaf {
+  width: 16px; height: 16px; background: var(--lima);
+  border-radius: 0 14px 0 14px; transform: rotate(-8deg);
+}
+.brand__drop {
+  position: absolute; right: 7px; bottom: 6px;
+  width: 11px; height: 11px; background: var(--agua);
+  border-radius: 50% 50% 50% 0; transform: rotate(45deg);
+}
+.brand__text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand__text strong { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: .5px; }
+.brand__text small { color: #c9ced2; font-size: .68rem; }
+
+.brand__status {
+  display: flex; align-items: center; gap: 7px;
+  font-size: .78rem; font-weight: 600;
+  background: rgba(255,255,255,.1); padding: 6px 11px; border-radius: 999px;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gris); }
+.dot--ok { background: var(--ok); box-shadow: 0 0 0 3px rgba(47,174,106,.25); }
+
+/* Banner conexión */
+.banner {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff7df; color: #7a5d00;
+  padding: 10px 18px; font-size: .85rem; font-weight: 600;
+  border-bottom: 1px solid #f0e3b8;
+}
+
+/* ===== Contenido ===== */
+.content { max-width: 760px; margin: 0 auto; padding: 22px 18px 8px; }
+.view { animation: fade .35s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
+
+.kicker {
+  font-family: var(--font-display); font-weight: 600;
+  color: var(--agua); font-size: .8rem; letter-spacing: .4px;
+  text-transform: none; margin-bottom: 4px;
+}
+.hero-title, .view-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.7rem; line-height: 1.15; margin-bottom: 18px;
+}
+.lead { color: var(--negro); margin-bottom: 16px; max-width: 60ch; }
+.lead.small { font-size: .9rem; color: var(--gris); }
+.muted { color: var(--gris); }
+.muted.small, .small { font-size: .82rem; }
+.big { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; }
+
+/* ===== Tarjetas ===== */
+.card {
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: 18px;
+  box-shadow: var(--sombra-sm); margin-bottom: 14px;
+}
+.card__title {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.ic { font-size: 1.05em; line-height: 1; }
+
+/* Tarjeta destacada (plan de riego) */
+.card--feature {
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, var(--lima-soft), var(--agua-soft));
+  border: none; border-radius: var(--radio-lg); padding: 20px;
+}
+.card--feature__icon {
+  width: 54px; height: 54px; flex: none; border-radius: 16px;
+  background: var(--blanco); display: grid; place-items: center; font-size: 1.6rem;
+  box-shadow: var(--sombra-sm);
+}
+.card--feature__label { font-size: .78rem; font-weight: 700; color: var(--gris); text-transform: uppercase; letter-spacing: .5px; }
+.card--feature__msg { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; margin-top: 2px; }
+
+/* Alerta */
+.card--alert { display: flex; align-items: center; gap: 14px; }
+.card--alert .ic { font-size: 1.6rem; }
+.card--alert.is-low { border-color: #f3d27a; background: #fff9ea; }
+
+/* Grids */
+.grid { display: grid; gap: 14px; }
+.grid--two { grid-template-columns: 1fr; }
+.grid--metrics { grid-template-columns: repeat(2, 1fr); margin-bottom: 14px; }
+.grid--cards { grid-template-columns: 1fr; }
+.grid--actions { grid-template-columns: 1fr; margin-bottom: 14px; }
+
+/* Métrica */
+.metric {
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: 14px 16px; box-shadow: var(--sombra-sm);
+}
+.metric__val { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; }
+.metric__label { color: var(--gris); font-size: .8rem; margin-top: 2px; }
+.metric__ic { font-size: 1.1rem; }
+
+/* Chips (cultivos) */
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+.chips li {
+  background: var(--lima-soft); color: #4a5400; font-weight: 600;
+  padding: 6px 13px; border-radius: 999px; font-size: .9rem;
+}
+
+/* Tarjeta de cultivo */
+.crop {
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); overflow: hidden; box-shadow: var(--sombra-sm);
+}
+.crop__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px; background: linear-gradient(120deg, var(--agua-soft), transparent);
+}
+.crop__name { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
+.crop__state {
+  font-size: .72rem; font-weight: 700; color: #2c6b3e;
+  background: #e3f5e9; padding: 4px 10px; border-radius: 999px;
+}
+.crop__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.crop__cell { padding: 12px 18px; border-top: 1px solid var(--borde); }
+.crop__cell:nth-child(odd) { border-right: 1px solid var(--borde); }
+.crop__k { color: var(--gris); font-size: .76rem; }
+.crop__v { font-weight: 600; }
+
+/* Clima */
+.card--clima { display: flex; align-items: center; gap: 22px; }
+.clima__temp { font-family: var(--font-display); font-weight: 700; font-size: 3.4rem; line-height: 1; }
+.clima__temp sup { font-size: 1.1rem; font-weight: 600; color: var(--gris); top: -1.4em; }
+.clima__meta p:first-child { font-weight: 700; font-size: 1.1rem; text-transform: capitalize; }
+
+/* Lista de estados (prototipo) */
+.statlist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.statlist li { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.statlist .badge {
+  font-size: .76rem; font-weight: 700; padding: 4px 11px; border-radius: 999px;
+  background: #e3f5e9; color: #2c6b3e;
+}
+
+/* Sección técnica plegable */
+.tech, .faq {
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); margin-bottom: 14px; overflow: hidden;
+}
+.tech > summary, .faq > summary {
+  cursor: pointer; padding: 16px 18px; font-weight: 600;
+  font-family: var(--font-display); list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tech > summary::after, .faq > summary::after { content: "＋"; color: var(--agua); font-weight: 700; }
+.tech[open] > summary::after, .faq[open] > summary::after { content: "－"; }
+.tech__body { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+.tech__code {
+  display: block; background: var(--negro); color: var(--lima);
+  font-family: ui-monospace, monospace; font-size: .9rem;
+  padding: 12px 14px; border-radius: 12px; word-break: break-all;
+}
+.faq { margin-bottom: 10px; }
+.faq > summary { padding: 14px 16px; font-size: .95rem; }
+.faq p { padding: 0 16px 16px; color: var(--gris); }
+
+/* Botones de acción (comunidad) */
+.action {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--blanco); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: 16px 18px;
+  font-weight: 600; color: var(--negro); text-decoration: none;
+  box-shadow: var(--sombra-sm); transition: transform .12s ease, box-shadow .12s ease;
+}
+.action:hover { transform: translateY(-2px); box-shadow: var(--sombra); }
+.action--lime { background: var(--lima); border-color: var(--lima); }
+.action--agua { background: var(--agua); border-color: var(--agua); }
+
+/* ===== Navegación ===== */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  display: flex; justify-content: space-between;
+  background: var(--blanco); border-top: 1px solid var(--borde);
+  padding: 6px 4px env(safe-area-inset-bottom);
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav__item {
+  flex: 1 0 auto; min-width: 56px; border: none; background: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 6px; color: var(--gris); font-size: .68rem; font-weight: 600;
+  font-family: var(--font-body); border-radius: 12px;
+}
+.nav__item .ic { font-size: 1.25rem; }
+.nav__item.is-active { color: var(--negro); }
+.nav__item.is-active .ic { filter: none; transform: translateY(-1px); }
+.nav__item.is-active::after {
+  content: ""; width: 18px; height: 3px; border-radius: 3px;
+  background: var(--lima); margin-top: 1px;
+}
+
+/* Accesibilidad: foco visible */
+.nav__item:focus-visible, .action:focus-visible,
+summary:focus-visible { outline: 3px solid var(--agua); outline-offset: 2px; }
+
+/* ===== Escritorio: nav lateral ===== */
+@media (min-width: 880px) {
+  .app { display: grid; grid-template-columns: 230px 1fr; grid-template-rows: auto auto 1fr; padding-bottom: 0; }
+  .topbar { grid-column: 1 / -1; }
+  .banner { grid-column: 1 / -1; }
+  .nav {
+    position: sticky; top: 0; align-self: start;
+    grid-row: 3; grid-column: 1; flex-direction: column;
+    border-top: none; border-right: 1px solid var(--borde);
+    height: calc(100vh - 66px); padding: 16px 12px; overflow: visible;
+  }
+  .nav__item { flex-direction: row; justify-content: flex-start; gap: 12px; min-width: 0; font-size: .92rem; padding: 12px 14px; }
+  .nav__item .ic { font-size: 1.15rem; }
+  .nav__item.is-active { background: var(--fondo); }
+  .nav__item.is-active::after { display: none; }
+  .content { grid-row: 3; grid-column: 2; max-width: 820px; padding: 30px 34px; }
+  .grid--two { grid-template-columns: 1fr 1fr; }
+  .grid--metrics { grid-template-columns: repeat(4, 1fr); }
+  .grid--cards { grid-template-columns: 1fr 1fr; }
+  .grid--actions { grid-template-columns: 1fr 1fr; }
+  .hero-title, .view-title { font-size: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition: none !important; }
+}
