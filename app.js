@@ -99,13 +99,13 @@ async function init() {
       console.warn("No se pudo conectar con Apps Script:", e);
       data = MOCK_DATA;
       usandoMock = true;
-      mostrarBanner("No se pudo conectar con el sistema. Mostrando datos de demostración.");
+      // mostrarBanner("No se pudo conectar con el sistema. Mostrando datos de demostración.");
     }
   }
 
-  if (usandoMock && USE_MOCK_DATA) {
-    mostrarBanner("Modo demostración activo. Cambia USE_MOCK_DATA a false para conectar datos reales.");
-  }
+  // if (usandoMock && USE_MOCK_DATA) {
+  //  mostrarBanner("Modo demostración activo. Cambia USE_MOCK_DATA a false para conectar datos reales.");
+  // }
 
   render(data);
   setupNav();
